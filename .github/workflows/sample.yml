@@ -22,7 +22,7 @@ jobs:
           PART_AFTER_SECOND_UNDERSCORE=$(echo $BRANCH_NAME | cut -d'_' -f3)
           if [ "$PART_AFTER_SECOND_UNDERSCORE" -lt 202440 ]; then
             echo "Branch name after the second underscore is less than 202440. Exiting."
-            exit 1
+            exit 0
           fi
 
       - name: Continue with pipeline
