@@ -1,8 +1,5 @@
 name: Check Branch Name
-
-on: 
-  workflow_dispatch:
-
+on: [push]
 jobs:
   check-branch-name:
     runs-on: ubuntu-latest
