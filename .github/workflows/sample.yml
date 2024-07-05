@@ -1,1 +1,33 @@
+name: Check Branch Name
 
+on: 
+  push:
+    branches:
+      -'**'
+  workflow_dispatch:
+
+jobs:
+  check-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Get branch name
+        id: get_branch
+        run: echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
+
+      - name: Validate branch name
+        id: validate_branch
+        run: |
+          BRANCH_NAME=${{ steps.get_branch.outputs.branch }}
+          PART_AFTER_SECOND_UNDERSCORE=$(echo $BRANCH_NAME | cut -d'_' -f3)
+          if [ "$PART_AFTER_SECOND_UNDERSCORE" -lt 202440 ]; then
+            echo "Branch name after the second underscore is less than 202440. Exiting."
+            exit 1
+          fi
+
+      - name: Continue with pipeline
+        run: echo "Branch name is valid, proceeding with the pipeline."
+
+     
