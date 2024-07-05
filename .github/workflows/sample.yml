@@ -4,15 +4,19 @@ jobs:
   check-branch-name:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+      - name: Check out repository and validate branch name
+        id: checkout_and_validate
         uses: actions/checkout@v2
-
+        with:
+          fetch-depth: 0  # Ensure the entire history is fetched for accurate branch name extraction
+      
       - name: Get branch name
         id: get_branch
         run: echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
 
       - name: Validate branch name
         id: validate_branch
+        if: ${{ success() }}  # Only run this step if the checkout and validation were successful
         run: |
           BRANCH_NAME=${{ steps.get_branch.outputs.branch }}
           PART_AFTER_SECOND_UNDERSCORE=$(echo $BRANCH_NAME | cut -d'_' -f3)
@@ -22,6 +26,5 @@ jobs:
           fi
 
       - name: Continue with pipeline
-        run: echo "Branch name is valid, proceeding with the pipeline."
-
-     
+        if: ${{ success() && steps.validate_branch.outcome == 'success' }}
+        run: echo "Branch name is valid, proceeding with the pipeline."     
