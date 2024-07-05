@@ -1,3 +1,4 @@
+# checking th branch name after second underscore it should be>=202440
 name: Check Branch Name
 on: [push]
 jobs:
