@@ -1,6 +1,7 @@
 # repo1: .github/workflows/reusable-workflow.yml
 name: Reusable Workflow
 
+# This workflow is triggered when it is called by another workflow
 on:
   workflow_call:
     inputs:
