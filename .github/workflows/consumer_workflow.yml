@@ -1,0 +1,31 @@
+name: Consumer Workflow
+
+on:
+  push:
+    branches:
+      - main  # adjust branch name as needed
+
+jobs:
+  aeh_access:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.inputs.resource_group && github.event.inputs.project_name && github.event.inputs.aeh_name && github.event.inputs.uaim
+    runs-on: ubuntu-latest
+    steps:
+      - name: AEH Access Request
+        run: |
+          echo "Accessing AEH ${INPUT_AEH_NAME} in ${INPUT_RESOURCE_GROUP} for project ${INPUT_PROJECT_NAME} with UAIM ${INPUT_UAIM}"
+
+  create_aeh_within_specific_project:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.inputs.resource_group && github.event.inputs.project_name && github.event.inputs.uaim && !github.event.inputs.aeh_name
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create AEH within Specific Project
+        run: |
+          echo "Creating AEH in ${INPUT_RESOURCE_GROUP} for project ${INPUT_PROJECT_NAME} with UAIM ${INPUT_UAIM}"
+          
+  create_aeh_without_projectname:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.inputs.resource_group && github.event.inputs.uaim && !github.event.inputs.project_name && !github.event.inputs.aeh_name
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create AEH without Project Name
+        run: |
+          echo "Creating AEH in ${INPUT_RESOURCE_GROUP} with shared namespace using UAIM ${INPUT_UAIM}"
